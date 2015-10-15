@@ -1,0 +1,11 @@
+How this model works:
+1. The average number of tries, conversions, penalty goals, and drop goals for and against are collected for each team.
+2. The stats are adjusted relative to previous opponents average World Cup stats, and then averaged.
+3. The stats are added to the current opponents average in order to get expected number of tries, penalty goals, drop goals, and probability of a successful conversion.
+4. Game scores are simulated using pseudorandom number generators following a Poisson distribution for the number, as well as treating conversions as binomial events.
+5. 5 million games are simulated for each matchup in order to get each team's chance of winning and the distribution of scores.
+
+Understanding the results:
+CHANCE OF WINNING: The chance of each team winning, rounded to the nearest whole percent.
+EXPECTED SCORE: The mean of each team's score distribution.
+PERCENTILES: There's an n% chance of a score being at or below a given score in the n-th percentile.
