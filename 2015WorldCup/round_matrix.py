@@ -9,37 +9,15 @@ import os
 
 round_timer = time.time()
 
-round_number = 'QF_Matrix'
+round_number = 'SF_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['RSA'] = [('RSA', 'WAL'),
-                   ('RSA', 'NZL'),
-                   ('RSA', 'FRA'),
-                   ('RSA', 'IRE'),
+matchups['RSA'] = [('RSA', 'NZL'),
                    ('RSA', 'ARG'),
-                   ('RSA', 'AUS'),
-                   ('RSA', 'SCO')]
-matchups['WAL'] = [('WAL', 'NZL'),
-                   ('WAL', 'FRA'),
-                   ('WAL', 'IRE'),
-                   ('WAL', 'ARG'),
-                   ('WAL', 'AUS'),
-                   ('WAL', 'SCO')]
-matchups['NZL'] = [('NZL', 'FRA'),
-                   ('NZL', 'IRE'),
-                   ('NZL', 'ARG'),
-                   ('NZL', 'AUS'),
-                   ('NZL', 'SCO')]
-matchups['FRA'] = [('FRA', 'IRE'),
-                   ('FRA', 'ARG'),
-                   ('FRA', 'AUS'),
-                   ('FRA', 'SCO')]
-matchups['IRE'] = [('IRE', 'ARG'),
-                   ('IRE', 'AUS'),
-                   ('IRE', 'SCO')]
-matchups['ARG'] = [('ARG', 'AUS'),
-                   ('ARG', 'SCO')]
-matchups['AUS'] = [('AUS', 'SCO')]
+                   ('RSA', 'AUS')]
+matchups['NZL'] = [('NZL', 'ARG'),
+                   ('NZL', 'AUS')]
+matchups['ARG'] = [('ARG', 'AUS')]
                       
 
 location = os.getcwd().replace('\\', '/')
@@ -86,6 +64,6 @@ for game_time in matchups:
         if i != len(games) - 1:
             sheet.write_string(0, 3 * i + 3, ' ')
 
-    week_book.close()
+week_book.close()
 
 print('Round ' + str(round_number) + ' predictions calculated in ' + str(round((time.time() - round_timer) / 60, 2)) + ' minutes')
