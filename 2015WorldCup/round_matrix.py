@@ -9,15 +9,11 @@ import os
 
 round_timer = time.time()
 
-round_number = 'SF_Matrix'
+round_number = 'F_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['RSA'] = [('RSA', 'NZL'),
-                   ('RSA', 'ARG'),
-                   ('RSA', 'AUS')]
-matchups['NZL'] = [('NZL', 'ARG'),
-                   ('NZL', 'AUS')]
-matchups['ARG'] = [('ARG', 'AUS')]
+matchups['Matchups'] = [('RSA', 'ARG'),
+                        ('NZL', 'AUS')]
                       
 
 location = os.getcwd().replace('\\', '/')

@@ -9,11 +9,10 @@ import os
 
 round_timer = time.time()
 
-round_number = 'Semifinals'
+round_number = 'Final'
 
 matchups = collections.OrderedDict()
-matchups['Saturday 24 October'] = [('RSA', 'NZL')]
-matchups['Sunday 25 October'] = [('ARG', 'AUS')]
+matchups['Saturday 31 October'] = [('NZL', 'AUS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/predictions/Round_' + str(round_number) + '.xlsx'
