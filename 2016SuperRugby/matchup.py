@@ -7,7 +7,7 @@ from numpy import mean
 import time
 import math
 
-po = True
+po = False
 
 teamsheetpath = sys.path[0] + '/teamcsvs/'
 
@@ -95,6 +95,9 @@ def game(team_1, team_2,
     elif tries_2 - tries_1 >= 3:
         bp1 = False
         bp2 = True
+    else:
+        bp1 = False
+        bp2 = False
 
     if score_1 > score_2:
         win_1 = 1
