@@ -16,16 +16,16 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 6
+round_number = 7
 
 matchups = collections.OrderedDict()
-matchups['Friday'] = [('HIGHLANDERS', 'FORCE'),
-                      ('LIONS', 'CRUSADERS')]
-matchups['Saturday'] = [('BLUES', 'JAGUARES'),
-                        ('BRUMBIES', 'CHIEFS'),
-                        ('KINGS', 'SUNWOLVES'),
-                        ('BULLS', 'CHEETAHS')]
-matchups['Sunday'] = [('WARATAHS', 'REBELS')]
+matchups['Friday'] = [('CHIEFS', 'BLUES'),
+                      ('FORCE', 'CRUSADERS'),
+                      ('STORMERS', 'SUNWOLVES')]
+matchups['Saturday'] = [('HURRICANES', 'JAGUARES'),
+                        ('REDS', 'HIGHLANDERS'),
+                        ('SHARKS', 'LIONS'),
+                        ('KINGS', 'BULLS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
