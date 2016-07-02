@@ -16,11 +16,11 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 7
+round_number = 12
 
 matchups = collections.OrderedDict()
-matchups['Week {}'.format(round_number)] = [('SAN DIEGO', 'SACRAMENTO'),
-                                            ('SAN FRANCISCO', 'OHIO')]
+matchups['Week {}'.format(round_number)] = [('OHIO', 'SAN DIEGO'),
+                                            ('SAN FRANCISCO', 'SACRAMENTO')]
 
 n_games = 0
 for day in matchups.keys():
