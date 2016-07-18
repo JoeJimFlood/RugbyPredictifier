@@ -7,7 +7,7 @@ from numpy import mean
 import time
 import math
 
-po = False
+po = True
 
 teamsheetpath = sys.path[0] + '/teamcsvs/'
 

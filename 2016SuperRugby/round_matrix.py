@@ -16,13 +16,37 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'Quarterfinals'
+round_number = 'QF_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['Friday'] = [('BRUMBIES', 'HIGHLANDERS')]
-matchups['Saturday'] = [('HURRICANES', 'SHARKS'),
-                        ('LIONS', 'CRUSADERS'),
-                        ('STORMERS', 'CHIEFS')]
+matchups['HURRICANES'] = [('HURRICANES', 'LIONS'),
+                          ('HURRICANES', 'STORMERS'),
+                          ('HURRICANES', 'BRUMBIES'),
+                          ('HURRICANES', 'HIGHLANDERS'),
+                          ('HURRICANES', 'CHIEFS'),
+                          ('HURRICANES', 'CRUSADERS'),
+                          ('HURRICANES', 'SHARKS')]
+matchups['LIONS'] = [('LIONS', 'STORMERS'),
+                     ('LIONS', 'BRUMBIES'),
+                     ('LIONS', 'HIGHLANDERS'),
+                     ('LIONS', 'CHIEFS'),
+                     ('LIONS', 'CRUSADERS'),
+                     ('LIONS', 'SHARKS')]
+matchups['STORMERS'] = [('STORMERS', 'BRUMBIES'),
+                        ('STORMERS', 'HIGHLANDERS'),
+                        ('STORMERS', 'CHIEFS'),
+                        ('STORMERS', 'CRUSADERS'),
+                        ('STORMERS', 'SHARKS')]
+matchups['BRUMBIES'] = [('BRUMBIES', 'HIGHLANDERS'),
+                        ('BRUMBIES', 'CHIEFS'),
+                        ('BRUMBIES', 'CRUSADERS'),
+                        ('BRUMBIES', 'SHARKS')]
+matchups['HIGHLANDERS'] = [('HIGHLANDERS', 'CHIEFS'),
+                           ('HIGHLANDERS', 'CRUSADERS'),
+                           ('HIGHLANDERS', 'SHARKS')]
+matchups['CHIEFS'] = [('CHIEFS', 'CRUSADERS'),
+                      ('CHIEFS', 'SHARKS')]
+matchups['CRUSADERS'] = [('CRUSADERS', 'SHARKS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
@@ -40,11 +64,6 @@ for team in teams:
     primary = rgb2hex(int(colour_df.loc[team, 'R1']), int(colour_df.loc[team, 'G1']), int(colour_df.loc[team, 'B1']))
     secondary = rgb2hex(int(colour_df.loc[team, 'R2']), int(colour_df.loc[team, 'G2']), int(colour_df.loc[team, 'B2']))
     colours[team] = (primary, secondary)
-
-
-plt.figure(figsize = (15, 15), dpi = 96)
-plt.title('Round ' + str(round_number))
-counter = 0
 
 for read_data in range(1):
 
@@ -117,32 +136,7 @@ for read_data in range(1):
                     sheet.write_number(23, awaycol, away_bp['Losing Bonus Point'], percent_format)
             if i != len(games) - 1:
                 sheet.write_string(0, 3 * i + 3, ' ')
-            
-
-            counter += 1
-            hwin = probwin[home]
-            awin = probwin[away]
-            draw = 1 - hwin - awin
-
-            plt.subplot(2, 2, counter)
-            labels = [home[:3], away[:3]]
-            values = [hwin, awin]
-            colors = [colours[home][0], colours[away][0]]
-            ex = 0.05
-            explode = [ex, ex]
-            plt.pie(values,
-                    colors = colors,
-                    labels = labels,
-                    explode = explode,
-                    autopct='%.0f%%',
-                    startangle = 90,
-                    labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center'})
-            plt.title(home + ' vs ' + away)
-            plt.axis('equal')
 
     week_book.close()
-
-plt.savefig(output_fig)
 
 print('Round ' + str(round_number) + ' predictions calculated in ' + str(round((time.time() - round_timer) / 60, 2)) + ' minutes')
