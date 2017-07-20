@@ -1,3 +1,6 @@
+import os
+os.chdir(os.path.dirname(__file__))
+
 import pandas as pd
 import matchup
 import xlsxwriter
@@ -5,7 +8,6 @@ import xlrd
 import sys
 import time
 import collections
-import os
 import matplotlib.pyplot as plt
 
 def rgb2hex(r, g, b):
@@ -16,10 +18,13 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'Final'
+round_number = 'Quarterfinals'
 
 matchups = collections.OrderedDict()
-matchups['Saturday'] = [('HURRICANES', 'LIONS')]
+matchups['Friday'] = [('BRUMBIES', 'HURRICANES')]
+matchups['Saturday'] = [('CRUSADERS', 'HIGHLANDERS'),
+                        ('LIONS', 'SHARKS'),
+                        ('STORMERS', 'CHIEFS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
@@ -121,7 +126,7 @@ for read_data in range(1):
             awin = probwin[away]
             draw = 1 - hwin - awin
 
-            plt.subplot(1, 1, counter)
+            plt.subplot(2, 2, counter)
             labels = [home[:3], away[:3]]
             values = [hwin, awin]
             colors = [colours[home][0], colours[away][0]]
