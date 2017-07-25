@@ -18,37 +18,15 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'QF_Matrix'
+round_number = 'SF_Matrix'
 
 matchups = collections.OrderedDict()
 matchups['LIONS'] = [('LIONS', 'CRUSADERS'),
-                     ('LIONS', 'STORMERS'),
-                     ('LIONS', 'BRUMBIES'),
                      ('LIONS', 'HURRICANES'),
-                     ('LIONS', 'CHIEFS'),
-                     ('LIONS', 'HIGHLANDERS'),
-                     ('LIONS', 'SHARKS')]
-matchups['CRUSADERS'] = [('CRUSADERS', 'STORMERS'),
-                         ('CRUSADERS', 'BRUMBIES'),
-                         ('CRUSADERS', 'HURRICANES'),
-                         ('CRUSADERS', 'CHIEFS'),
-                         ('CRUSADERS', 'HIGHLANDERS'),
-                         ('CRUSADERS', 'SHARKS')]
-matchups['STORMERS'] = [('STORMERS', 'BRUMBIES'),
-                        ('STORMERS', 'HURRICANES'),
-                        ('STORMERS', 'CHIEFS'),
-                        ('STORMERS', 'HIGHLANDERS'),
-                        ('STORMERS', 'SHARKS')]
-matchups['BRUMBIES'] = [('BRUMBIES', 'HURRICANES'),
-                        ('BRUMBIES', 'CHIEFS'),
-                        ('BRUMBIES', 'HIGHLANDERS'),
-                        ('BRUMBIES', 'SHARKS')]
-matchups['HURRICANES'] = [('HURRICANES', 'CHIEFS'),
-                          ('HURRICANES', 'HIGHLANDERS'),
-                          ('HURRICANES', 'SHARKS')]
-matchups['CHIEFS'] = [('CHIEFS', 'HIGHLANDERS'),
-                      ('CHIEFS', 'SHARKS')]
-matchups['HIGHLANDERS'] = [('HIGHLANDERS', 'SHARKS')]
+                     ('LIONS', 'CHIEFS')]
+matchups['CRUSADERS'] = [('CRUSADERS', 'HURRICANES'),
+                         ('CRUSADERS', 'CHIEFS')]
+matchups['HURRICANES'] = [('HURRICANES', 'CHIEFS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
