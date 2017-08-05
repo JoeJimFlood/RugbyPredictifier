@@ -18,12 +18,11 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'Semifinals'
+round_number = 'Final'
 
 matchups = collections.OrderedDict()
 
-matchups['Semifinals'] = [('CRUSADERS', 'CHIEFS'),
-                          ('LIONS', 'HURRICANES')]
+matchups['Semifinals'] = [('LIONS', 'CRUSADERS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
