@@ -32,9 +32,9 @@ def get_opponent_stats(opponent): #Gets summaries of statistics for opponent eac
     opponent_stats.update({'CON%A': float(opp_stats['CA'].sum())/opp_stats['TA'].sum()})
     return opponent_stats
 
-def get_residual_performance(team): #Get how each team has done compared to the average performance of their opponents
-    global teamsheetpath
-    score_df = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team + '.csv'))
+def get_residual_performance(score_df): #Get how each team has done compared to the average performance of their opponents
+    global teamsheetpath, team_homes, stadium_locs
+    #score_df = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team + '.csv'))
     residual_stats = {}
     score_df['CON%F'] = np.nan
     score_df['CON%A'] = np.nan
@@ -51,11 +51,11 @@ def get_residual_performance(team): #Get how each team has done compared to the 
         
         score_df['R_' + stat] = score_df[stat] - score_df['OPP_' + compstat[stat]]
         if stat in ['TF', 'PF', 'DGF', 'TA', 'PA', 'DGA']:
-            residual_stats.update({stat: score_df['R_' + stat].mean()})
+            residual_stats.update({stat: np.average(score_df['R_' + stat], weights = score_df['Weight'])})
         elif stat == 'CON%F':
-            residual_stats.update({stat: (score_df['R_CON%F'].multiply(score_df['TF'])).sum() / score_df['TF'].sum()})
+            residual_stats.update({stat: (score_df['R_CON%F'].multiply(score_df['TF'])*score_df['Weight']).sum() / (score_df['TF']*score_df['Weight']).sum()})
         elif stat == 'CON%A':
-            residual_stats.update({stat: (score_df['R_CON%A'].multiply(score_df['TA'])).sum() / score_df['TA'].sum()})
+            residual_stats.update({stat: (score_df['R_CON%A'].multiply(score_df['TA'])*score_df['Weight']).sum() / (score_df['TA']*score_df['Weight']).sum()})
     return residual_stats
 
 def get_score(expected_scores): #Get the score for a team based on expected scores
@@ -258,8 +258,8 @@ def matchup(team_1, team_2, venue = None):
     team_2_season = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team_2 + '.csv'))
     team_1_season['Weight'] = team_1_season['VENUE'].apply(get_team_1_weight)
     team_2_season['Weight'] = team_2_season['VENUE'].apply(get_team_2_weight)
-    stats_1 = get_residual_performance(team_1)
-    stats_2 = get_residual_performance(team_2)
+    stats_1 = get_residual_performance(team_1_season)
+    stats_2 = get_residual_performance(team_2_season)
     expected_scores_1 = get_expected_scores(stats_1, stats_2, team_1_season, team_2_season)
     expected_scores_2 = get_expected_scores(stats_2, stats_1, team_2_season, team_1_season)
     team_1_wins = 0
@@ -278,7 +278,7 @@ def matchup(team_1, team_2, venue = None):
     team_2_scores = []
     i = 0
     error = 1
-    while error > 0.000001 or i < 5000000: #Run until convergence after 5 million iterations
+    while error > 0.000001 or i < 500000: #Run until convergence after 5 million iterations
         summary = game(team_1, team_2,
                        expected_scores_1, expected_scores_2,
                        playoff = po)
