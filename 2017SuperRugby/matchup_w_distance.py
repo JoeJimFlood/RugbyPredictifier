@@ -20,16 +20,27 @@ compstat = {'TF': 'TA', 'TA': 'TF', #Dictionary to use to compare team stats wit
             'PF': 'PA', 'PA': 'PF',
             'DGF': 'DGA', 'DGA': 'DGF'}
 
-def get_opponent_stats(opponent): #Gets summaries of statistics for opponent each week
+def get_opponent_stats(opponent, venue): #Gets summaries of statistics for opponent each week
     opponent_stats = {}
-    global teamsheetpath
+    global teamsheetpath, stadium_locs, team_homes
     opp_stats = pd.DataFrame.from_csv(os.path.join(teamsheetpath, opponent + '.csv'))
+
+    opponent_home = team_homes[1][opponent]
+    (venue_lat, venue_lng) = stadium_locs.loc[venue, ['Lat', 'Long']]
+    (opponent_home_lat, opponent_home_lng) = stadium_locs.loc[opponent_home, ['Lat', 'Long']]
+    opponent_reference_distance = geodesic_distance(opponent_home_lat, opponent_home_lng, venue_lat, venue_lng)
+
+    def get_opponent_weight(location):
+        return get_travel_weight(location, opponent_home_lat, opponent_home_lng, opponent_reference_distance)
+
+    opp_stats['Weight'] = opp_stats['VENUE'].apply(get_opponent_weight)
+
     for stat in opp_stats.columns:
         if stat != 'VENUE':
             if stat != 'OPP':
-                opponent_stats.update({stat: opp_stats[stat].mean()})
-    opponent_stats.update({'CON%F': float(opp_stats['CF'].sum())/opp_stats['TF'].sum()})
-    opponent_stats.update({'CON%A': float(opp_stats['CA'].sum())/opp_stats['TA'].sum()})
+                opponent_stats.update({stat: np.average(opp_stats[stat], weights = opp_stats['Weight'])})
+    opponent_stats.update({'CON%F': float((opp_stats['CF']*opp_stats['Weight']).sum())/(opp_stats['TF']*opp_stats['Weight']).sum()})
+    opponent_stats.update({'CON%A': float((opp_stats['CA']*opp_stats['Weight']).sum())/(opp_stats['TA']*opp_stats['Weight']).sum()})
     return opponent_stats
 
 def get_residual_performance(score_df): #Get how each team has done compared to the average performance of their opponents
@@ -39,7 +50,7 @@ def get_residual_performance(score_df): #Get how each team has done compared to 
     score_df['CON%F'] = np.nan
     score_df['CON%A'] = np.nan
     for week in score_df.index:
-        opponent_stats = get_opponent_stats(score_df['OPP'][week])
+        opponent_stats = get_opponent_stats(score_df['OPP'][week], score_df['VENUE'][week])
         for stat in opponent_stats:
             if week == score_df.index.tolist()[0]:
                 score_df['OPP_' + stat] = np.nan       
@@ -49,6 +60,9 @@ def get_residual_performance(score_df): #Get how each team has done compared to 
     #print opponent_stats
     for stat in opponent_stats:
         
+        if stat == 'Weight':
+            continue
+
         score_df['R_' + stat] = score_df[stat] - score_df['OPP_' + compstat[stat]]
         if stat in ['TF', 'PF', 'DGF', 'TA', 'PA', 'DGA']:
             residual_stats.update({stat: np.average(score_df['R_' + stat], weights = score_df['Weight'])})
@@ -348,5 +362,7 @@ def matchup(team_1, team_2, venue = None):
 
     return output
 
-results = matchup('STORMERS', 'CHIEFS')
-print(results)
+results1 = matchup('STORMERS', 'CHIEFS')
+results2 = matchup('CHIEFS', 'STORMERS')
+print(results1['ProbWin'])
+print(results2['ProbWin'])
