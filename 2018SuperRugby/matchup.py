@@ -9,7 +9,10 @@ import math
 
 po = True
 
-teamsheetpath = sys.path[0] + '/teamcsvs/'
+team_homes = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'TeamHomes.csv'), header = None, index_col = 0)
+stadium_locs = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'StadiumLocs.csv'), index_col = 0)
+
+teamsheetpath = os.path.join(os.path.split(__file__)[0], 'teamcsvs')
 
 compstat = {'TF': 'TA', 'TA': 'TF', #Dictionary to use to compare team stats with opponent stats
             'CF': 'CA', 'CA': 'CF',
@@ -17,25 +20,37 @@ compstat = {'TF': 'TA', 'TA': 'TF', #Dictionary to use to compare team stats wit
             'PF': 'PA', 'PA': 'PF',
             'DGF': 'DGA', 'DGA': 'DGF'}
 
-def get_opponent_stats(opponent): #Gets summaries of statistics for opponent each week
+def get_opponent_stats(opponent, venue): #Gets summaries of statistics for opponent each week
     opponent_stats = {}
-    global teamsheetpath
-    opp_stats = pd.DataFrame.from_csv(teamsheetpath + opponent + '.csv')
+    global teamsheetpath, stadium_locs, team_homes
+    opp_stats = pd.DataFrame.from_csv(os.path.join(teamsheetpath, opponent + '.csv'))
+
+    opponent_home = team_homes[1][opponent]
+    (venue_lat, venue_lng) = stadium_locs.loc[venue, ['Lat', 'Long']]
+    (opponent_home_lat, opponent_home_lng) = stadium_locs.loc[opponent_home, ['Lat', 'Long']]
+    opponent_reference_distance = geodesic_distance(opponent_home_lat, opponent_home_lng, venue_lat, venue_lng)
+
+    def get_opponent_weight(location):
+        return get_travel_weight(location, opponent_home_lat, opponent_home_lng, opponent_reference_distance)
+
+    opp_stats['Weight'] = opp_stats['VENUE'].apply(get_opponent_weight)
+
     for stat in opp_stats.columns:
-        if stat != 'OPP':
-            opponent_stats.update({stat: opp_stats[stat].mean()})
-    opponent_stats.update({'CON%F': float(opp_stats['CF'].sum())/opp_stats['TF'].sum()})
-    opponent_stats.update({'CON%A': float(opp_stats['CA'].sum())/opp_stats['TA'].sum()})
+        if stat != 'VENUE':
+            if stat != 'OPP':
+                opponent_stats.update({stat: np.average(opp_stats[stat], weights = opp_stats['Weight'])})
+    opponent_stats.update({'CON%F': float((opp_stats['CF']*opp_stats['Weight']).sum())/(opp_stats['TF']*opp_stats['Weight']).sum()})
+    opponent_stats.update({'CON%A': float((opp_stats['CA']*opp_stats['Weight']).sum())/(opp_stats['TA']*opp_stats['Weight']).sum()})
     return opponent_stats
 
-def get_residual_performance(team): #Get how each team has done compared to the average performance of their opponents
-    global teamsheetpath
-    score_df = pd.DataFrame.from_csv(teamsheetpath + team + '.csv')
+def get_residual_performance(score_df): #Get how each team has done compared to the average performance of their opponents
+    global teamsheetpath, team_homes, stadium_locs
+    #score_df = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team + '.csv'))
     residual_stats = {}
     score_df['CON%F'] = np.nan
     score_df['CON%A'] = np.nan
     for week in score_df.index:
-        opponent_stats = get_opponent_stats(score_df['OPP'][week])
+        opponent_stats = get_opponent_stats(score_df['OPP'][week], score_df['VENUE'][week])
         for stat in opponent_stats:
             if week == score_df.index.tolist()[0]:
                 score_df['OPP_' + stat] = np.nan       
@@ -45,13 +60,16 @@ def get_residual_performance(team): #Get how each team has done compared to the 
     #print opponent_stats
     for stat in opponent_stats:
         
+        if stat == 'Weight':
+            continue
+
         score_df['R_' + stat] = score_df[stat] - score_df['OPP_' + compstat[stat]]
         if stat in ['TF', 'PF', 'DGF', 'TA', 'PA', 'DGA']:
-            residual_stats.update({stat: score_df['R_' + stat].mean()})
+            residual_stats.update({stat: np.average(score_df['R_' + stat], weights = score_df['Weight'])})
         elif stat == 'CON%F':
-            residual_stats.update({stat: (score_df['R_CON%F'].multiply(score_df['TF'])).sum() / score_df['TF'].sum()})
+            residual_stats.update({stat: (score_df['R_CON%F'].multiply(score_df['TF'])*score_df['Weight']).sum() / (score_df['TF']*score_df['Weight']).sum()})
         elif stat == 'CON%A':
-            residual_stats.update({stat: (score_df['R_CON%A'].multiply(score_df['TA'])).sum() / score_df['TA'].sum()})
+            residual_stats.update({stat: (score_df['R_CON%A'].multiply(score_df['TA'])*score_df['Weight']).sum() / (score_df['TA']*score_df['Weight']).sum()})
     return residual_stats
 
 def get_score(expected_scores): #Get the score for a team based on expected scores
@@ -184,16 +202,16 @@ def game(team_1, team_2,
 def get_expected_scores(team_1_stats, team_2_stats, team_1_df, team_2_df): #Get the expected scores for a matchup based on the previous teams' performances
     expected_scores = {}
     for stat in team_1_stats:
-        expected_scores.update({'T': mean([team_1_stats['TF'] + team_2_df['TA'].mean(),
-                                           team_2_stats['TA'] + team_1_df['TF'].mean()])})
-        expected_scores.update({'P': mean([team_1_stats['PF'] + team_2_df['PA'].mean(),
-                                           team_2_stats['PA'] + team_1_df['PF'].mean()])})
-        expected_scores.update({'DG': mean([team_1_stats['DGF'] + team_2_df['DGA'].mean(),
-                                            team_2_stats['DGA'] + team_1_df['DGF'].mean()])})
+        expected_scores.update({'T': mean([team_1_stats['TF'] + np.average(team_2_df['TA'], weights = team_2_df['Weight']),
+                                           team_2_stats['TA'] + np.average(team_1_df['TF'], weights = team_1_df['Weight'])])})
+        expected_scores.update({'P': mean([team_1_stats['PF'] + np.average(team_2_df['PA'], weights = team_2_df['Weight']),
+                                           team_2_stats['PA'] + np.average(team_1_df['PF'], weights = team_1_df['Weight'])])})
+        expected_scores.update({'DG': mean([team_1_stats['DGF'] + np.average(team_2_df['DGA'], weights = team_2_df['Weight']),
+                                            team_2_stats['DGA'] + np.average(team_1_df['DGF'], weights = team_1_df['Weight'])])})
         #print mean([team_1_stats['PAT1%F'] + team_2_df['PAT1AS'].astype('float').sum() / team_2_df['PAT1AA'].sum(),
         #       team_2_stats['PAT1%A'] + team_1_df['PAT1FS'].astype('float').sum() / team_1_df['PAT1FA'].sum()])
-        conprob = mean([team_1_stats['CON%F'] + team_2_df['CA'].astype('float').sum() / team_2_df['TA'].sum(),
-                        team_2_stats['CON%A'] + team_1_df['CF'].astype('float').sum() / team_1_df['TF'].sum()])
+        conprob = mean([team_1_stats['CON%F'] + (team_2_df['CA']*team_2_df['Weight']).sum() / (team_2_df['TA']*team_2_df['Weight']).sum(),
+                        team_2_stats['CON%A'] + (team_1_df['CF']*team_1_df['Weight']).sum() / (team_1_df['TF']*team_1_df['Weight']).sum()])
         if not math.isnan(conprob):
             expected_scores.update({'CONPROB': conprob})
         else:
@@ -201,13 +219,61 @@ def get_expected_scores(team_1_stats, team_2_stats, team_1_df, team_2_df): #Get 
         #print(expected_scores['PAT1PROB'])
     #print(expected_scores)
     return expected_scores
+
+def geodesic_distance(olat, olng, dlat, dlng):
+    '''
+    Returns geodesic distance in percentage of half the earth's circumference between two points on the earth's surface
+    '''
+    scale = math.tau/360
+    olat *= scale
+    olng *= scale
+    dlat *= scale
+    dlng *= scale
+
+    delta_lat = (dlat - olat)
+    delta_lng = (dlng - olng)
+
+    a = math.sin(delta_lat/2)**2 + math.cos(olat)*math.cos(dlat)*math.sin(delta_lng/2)**2
+    return 4*math.atan2(math.sqrt(a), math.sqrt(1-a))/math.tau
+
+def get_travel_weight(venue, home_lat, home_lng, reference_distance):
+    '''
+    Gets the travel weight based on a venue, a team's home lat/long coordinates, and a reference distance
+    '''
+    global stadium_locs
+    (venue_lat, venue_lng) = stadium_locs.loc[venue, ['Lat', 'Long']]
+    
+    travel_distance = geodesic_distance(home_lat, home_lng, venue_lat, venue_lng)
+    return 1 - abs(travel_distance - reference_distance)
             
-def matchup(team_1, team_2):
+def matchup(team_1, team_2, venue = None):
     ts = time.time()
-    team_1_season = pd.DataFrame.from_csv(teamsheetpath + team_1 + '.csv')
-    team_2_season = pd.DataFrame.from_csv(teamsheetpath + team_2 + '.csv')
-    stats_1 = get_residual_performance(team_1)
-    stats_2 = get_residual_performance(team_2)
+    global team_homes, stadium_locs
+
+    team_1_home = team_homes[1][team_1]
+    team_2_home = team_homes[1][team_2]
+
+    if venue is None:
+        venue = team_homes[1][team_1]
+
+    (venue_lat, venue_lng) = stadium_locs.loc[venue, ['Lat', 'Long']]
+    (team_1_home_lat, team_1_home_lng) = stadium_locs.loc[team_1_home, ['Lat', 'Long']]
+    (team_2_home_lat, team_2_home_lng) = stadium_locs.loc[team_2_home, ['Lat', 'Long']]
+    team_1_reference_distance = geodesic_distance(team_1_home_lat, team_1_home_lng, venue_lat, venue_lng)
+    team_2_reference_distance = geodesic_distance(team_2_home_lat, team_2_home_lng, venue_lat, venue_lng)
+
+    def get_team_1_weight(location):
+        return get_travel_weight(location, team_1_home_lat, team_1_home_lng, team_1_reference_distance)
+
+    def get_team_2_weight(location):
+        return get_travel_weight(location, team_2_home_lat, team_2_home_lng, team_2_reference_distance)
+
+    team_1_season = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team_1 + '.csv'))
+    team_2_season = pd.DataFrame.from_csv(os.path.join(teamsheetpath, team_2 + '.csv'))
+    team_1_season['Weight'] = team_1_season['VENUE'].apply(get_team_1_weight)
+    team_2_season['Weight'] = team_2_season['VENUE'].apply(get_team_2_weight)
+    stats_1 = get_residual_performance(team_1_season)
+    stats_2 = get_residual_performance(team_2_season)
     expected_scores_1 = get_expected_scores(stats_1, stats_2, team_1_season, team_2_season)
     expected_scores_2 = get_expected_scores(stats_2, stats_1, team_2_season, team_1_season)
     team_1_wins = 0
@@ -226,7 +292,7 @@ def matchup(team_1, team_2):
     team_2_scores = []
     i = 0
     error = 1
-    while error > 0.000001 or i < 5000000: #Run until convergence after 5 million iterations
+    while error > 0.000001 or i < 500000: #Run until convergence after 5 million iterations
         summary = game(team_1, team_2,
                        expected_scores_1, expected_scores_2,
                        playoff = po)
@@ -295,3 +361,13 @@ def matchup(team_1, team_2):
     print(team_1 + '/' + team_2 + ' score distributions computed in ' + str(round(time.time() - ts, 1)) + ' seconds')
 
     return output
+
+results1 = matchup('STORMERS', 'CHIEFS')
+results2 = matchup('CHIEFS', 'STORMERS')
+results3 = matchup('LIONS', 'CRUSADERS')
+results4 = matchup('CRUSADERS', 'LIONS')
+print(results1['ProbWin'])
+print(results2['ProbWin'])
+print('')
+print(results3['ProbWin'])
+print(results4['ProbWin'])
