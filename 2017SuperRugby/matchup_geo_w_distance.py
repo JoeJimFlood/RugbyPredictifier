@@ -7,6 +7,14 @@ from numpy import mean
 import time
 import math
 
+def geo_average(values, weights = None):
+    values = np.array(values)
+    if weights is None:
+        weights = np.ones_like(values)
+    else:
+        weights = np.array(weights)
+    return np.power((np.power(values + 1, weights).prod()), 1/weights.sum()) - 1
+
 po = True
 
 team_homes = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'TeamHomes.csv'), header = None, index_col = 0)
@@ -38,7 +46,7 @@ def get_opponent_stats(opponent, venue): #Gets summaries of statistics for oppon
     for stat in opp_stats.columns:
         if stat != 'VENUE':
             if stat != 'OPP':
-                opponent_stats.update({stat: np.average(opp_stats[stat], weights = opp_stats['Weight'])})
+                opponent_stats.update({stat: geo_average(opp_stats[stat], weights = opp_stats['Weight'])})
     opponent_stats.update({'CON%F': float((opp_stats['CF']*opp_stats['Weight']).sum())/(opp_stats['TF']*opp_stats['Weight']).sum()})
     opponent_stats.update({'CON%A': float((opp_stats['CA']*opp_stats['Weight']).sum())/(opp_stats['TA']*opp_stats['Weight']).sum()})
     return opponent_stats
@@ -65,7 +73,7 @@ def get_residual_performance(score_df): #Get how each team has done compared to 
 
         score_df['R_' + stat] = score_df[stat] - score_df['OPP_' + compstat[stat]]
         if stat in ['TF', 'PF', 'DGF', 'TA', 'PA', 'DGA']:
-            residual_stats.update({stat: np.average(score_df['R_' + stat], weights = score_df['Weight'])})
+            residual_stats.update({stat: geo_average(score_df['R_' + stat], weights = score_df['Weight'])})
         elif stat == 'CON%F':
             residual_stats.update({stat: (score_df['R_CON%F'].multiply(score_df['TF'])*score_df['Weight']).sum() / (score_df['TF']*score_df['Weight']).sum()})
         elif stat == 'CON%A':
@@ -202,15 +210,15 @@ def game(team_1, team_2,
 def get_expected_scores(team_1_stats, team_2_stats, team_1_df, team_2_df): #Get the expected scores for a matchup based on the previous teams' performances
     expected_scores = {}
     for stat in team_1_stats:
-        expected_scores.update({'T': mean([team_1_stats['TF'] + np.average(team_2_df['TA'], weights = team_2_df['Weight']),
-                                           team_2_stats['TA'] + np.average(team_1_df['TF'], weights = team_1_df['Weight'])])})
-        expected_scores.update({'P': mean([team_1_stats['PF'] + np.average(team_2_df['PA'], weights = team_2_df['Weight']),
-                                           team_2_stats['PA'] + np.average(team_1_df['PF'], weights = team_1_df['Weight'])])})
-        expected_scores.update({'DG': mean([team_1_stats['DGF'] + np.average(team_2_df['DGA'], weights = team_2_df['Weight']),
-                                            team_2_stats['DGA'] + np.average(team_1_df['DGF'], weights = team_1_df['Weight'])])})
-        #print mean([team_1_stats['PAT1%F'] + team_2_df['PAT1AS'].astype('float').sum() / team_2_df['PAT1AA'].sum(),
+        expected_scores.update({'T': geo_average([team_1_stats['TF'] + geo_average(team_2_df['TA'], weights = team_2_df['Weight']),
+                                           team_2_stats['TA'] + geo_average(team_1_df['TF'], weights = team_1_df['Weight'])])})
+        expected_scores.update({'P': geo_average([team_1_stats['PF'] + geo_average(team_2_df['PA'], weights = team_2_df['Weight']),
+                                           team_2_stats['PA'] + geo_average(team_1_df['PF'], weights = team_1_df['Weight'])])})
+        expected_scores.update({'DG': geo_average([team_1_stats['DGF'] + geo_average(team_2_df['DGA'], weights = team_2_df['Weight']),
+                                            team_2_stats['DGA'] + geo_average(team_1_df['DGF'], weights = team_1_df['Weight'])])})
+        #print geo_average([team_1_stats['PAT1%F'] + team_2_df['PAT1AS'].astype('float').sum() / team_2_df['PAT1AA'].sum(),
         #       team_2_stats['PAT1%A'] + team_1_df['PAT1FS'].astype('float').sum() / team_1_df['PAT1FA'].sum()])
-        conprob = mean([team_1_stats['CON%F'] + (team_2_df['CA']*team_2_df['Weight']).sum() / (team_2_df['TA']*team_2_df['Weight']).sum(),
+        conprob = geo_average([team_1_stats['CON%F'] + (team_2_df['CA']*team_2_df['Weight']).sum() / (team_2_df['TA']*team_2_df['Weight']).sum(),
                         team_2_stats['CON%A'] + (team_1_df['CF']*team_1_df['Weight']).sum() / (team_1_df['TF']*team_1_df['Weight']).sum()])
         if not math.isnan(conprob):
             expected_scores.update({'CONPROB': conprob})

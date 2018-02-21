@@ -292,7 +292,7 @@ def matchup(team_1, team_2, venue = None):
     team_2_scores = []
     i = 0
     error = 1
-    while error > 0.000001 or i < 500000: #Run until convergence after 5 million iterations
+    while error > 0.000001 or i < 5000000: #Run until convergence after 5 million iterations
         summary = game(team_1, team_2,
                        expected_scores_1, expected_scores_2,
                        playoff = po)
@@ -361,13 +361,3 @@ def matchup(team_1, team_2, venue = None):
     print(team_1 + '/' + team_2 + ' score distributions computed in ' + str(round(time.time() - ts, 1)) + ' seconds')
 
     return output
-
-results1 = matchup('STORMERS', 'CHIEFS')
-results2 = matchup('CHIEFS', 'STORMERS')
-results3 = matchup('LIONS', 'CRUSADERS')
-results4 = matchup('CRUSADERS', 'LIONS')
-print(results1['ProbWin'])
-print(results2['ProbWin'])
-print('')
-print(results3['ProbWin'])
-print(results4['ProbWin'])
