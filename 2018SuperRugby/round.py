@@ -18,11 +18,11 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'Final'
+round_number = 2
 
 matchups = collections.OrderedDict()
 
-matchups['Semifinals'] = [('LIONS', 'CRUSADERS')]
+matchups['Saturday'] = [('LIONS', 'JAGUARES')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
@@ -124,7 +124,7 @@ for read_data in range(1):
             awin = probwin[away]
             draw = 1 - hwin - awin
 
-            plt.subplot(1, 2, counter)
+            plt.subplot(1, 1, counter)
             labels = [home[:3], away[:3]]
             values = [hwin, awin]
             colors = [colours[home][0], colours[away][0]]
