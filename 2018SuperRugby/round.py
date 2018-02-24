@@ -9,6 +9,7 @@ import sys
 import time
 import collections
 import matplotlib.pyplot as plt
+from math import ceil, sqrt
 
 def rgb2hex(r, g, b):
     r_hex = hex(r)[-2:].replace('x', '0')
@@ -16,13 +17,27 @@ def rgb2hex(r, g, b):
     b_hex = hex(b)[-2:].replace('x', '0')
     return '#' + r_hex + g_hex + b_hex
 
+plot_shape = {1: (1, 1),
+              2: (1, 2),
+              3: (2, 2),
+              4: (2, 2),
+              5: (2, 3),
+              6: (2, 3),
+              7: (3, 3)}
+
 round_timer = time.time()
 
-round_number = 2
+round_number = 3
 
 matchups = collections.OrderedDict()
 
-matchups['Saturday'] = [('LIONS', 'JAGUARES')]
+matchups['Friday'] = [('BLUES', 'CHIEFS'),
+                      ('REDS', 'BRUMBIES')]
+matchups['Saturday'] = [('SUNWOLVES', 'REBELS'),
+                        ('CRUSADERS', 'STORMERS'),
+                        ('SHARKS', 'WARATAHS'),
+                        ('BULLS', 'LIONS'),
+                        ('JAGUARES', 'HURRICANES')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
@@ -124,12 +139,21 @@ for read_data in range(1):
             awin = probwin[away]
             draw = 1 - hwin - awin
 
-            plt.subplot(1, 1, counter)
-            labels = [home[:3], away[:3]]
-            values = [hwin, awin]
-            colors = [colours[home][0], colours[away][0]]
+            if n_games == 7 and counter == 7:
+                plot_pos = 8
+            elif n_games == 8 and counter == 8:
+                plot_pos = 9
+            elif n_games == 6 and counter == 5:
+                plot_pos = 6
+            else:
+                plot_pos = counter
+
+            plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
+            labels = [home[:3], away[:3], 'DRAW']
+            values = [hwin, awin, 1 - hwin - awin]
+            colors = [colours[home][0], colours[away][0], '#808080']
             ex = 0.05
-            explode = [ex, ex]
+            explode = [ex, ex, ex]
             plt.pie(values,
                     colors = colors,
                     labels = labels,
@@ -137,7 +161,7 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center'})
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
             plt.title(home + ' vs ' + away)
             plt.axis('equal')
 
