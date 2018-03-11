@@ -27,17 +27,17 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 4
+round_number = 5
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('HIGHLANDERS', 'STORMERS'),
-                      ('REBELS', 'BRUMBIES')]
-matchups['Saturday'] = [('HURRICANES', 'CRUSADERS'),
-                        ('REDS', 'BULLS'),
-                        ('SHARKS', 'SUNWOLVES'),
-                        ('LIONS', 'BLUES'),
-                        ('JAGUARES', 'WARATAHS')]
+matchups['Friday'] = [('CHIEFS', 'BULLS')]
+matchups['Saturday'] = [('HIGHLANDERS', 'CRUSADERS'),
+                        ('BRUMBIES', 'SHARKS'),
+                        ('STORMERS', 'BLUES'),
+                        ('LIONS', 'SUNWOLVES'),
+                        ('JAGUARES', 'REDS')]
+matchups['Sunday'] = [('WARATAHS', 'REBELS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
