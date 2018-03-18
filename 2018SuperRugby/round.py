@@ -3,6 +3,7 @@ os.chdir(os.path.dirname(__file__))
 
 import pandas as pd
 import matchup
+import ranking
 import xlsxwriter
 import xlrd
 import sys
@@ -27,21 +28,22 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 5
+round_number = 6
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('CHIEFS', 'BULLS')]
-matchups['Saturday'] = [('HIGHLANDERS', 'CRUSADERS'),
-                        ('BRUMBIES', 'SHARKS'),
-                        ('STORMERS', 'BLUES'),
-                        ('LIONS', 'SUNWOLVES'),
-                        ('JAGUARES', 'REDS')]
-matchups['Sunday'] = [('WARATAHS', 'REBELS')]
+matchups['Friday'] = [('CRUSADERS', 'BULLS'),
+                      ('REBELS', 'SHARKS')]
+matchups['Saturday'] = [('SUNWOLVES', 'CHIEFS'),
+                        ('HURRICANES', 'HIGHLANDERS'),
+                        ('STORMERS', 'REDS'),
+                        ('JAGUARES', 'LIONS')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
 output_fig = location + '/Weekly Forecasts/Round_' + str(round_number) + '.png'
+
+rankings = ranking.rank(os.path.join(location, 'teamcsvs'), round_number)
 
 n_games = 0
 for day in matchups:
@@ -132,19 +134,23 @@ for read_data in range(1):
                     sheet.write_number(23, awaycol, away_bp['Losing Bonus Point'], percent_format)
             if i != len(games) - 1:
                 sheet.write_string(0, 3 * i + 3, ' ')
-            
 
             counter += 1
             hwin = probwin[home]
             awin = probwin[away]
             draw = 1 - hwin - awin
 
+            #Calculate hype
+            home_ranking = rankings.loc[home, 'Quantile']
+            away_ranking = rankings.loc[away, 'Quantile']
+            ranking_factor = (home_ranking + away_ranking)/2
+            uncertainty_factor = 1 - (hwin - awin)**2
+            hype = 100*ranking_factor*uncertainty_factor
+
             if n_games == 7 and counter == 7:
                 plot_pos = 8
             elif n_games == 8 and counter == 8:
                 plot_pos = 9
-            elif n_games == 6 and counter == 5:
-                plot_pos = 6
             else:
                 plot_pos = counter
 
@@ -162,7 +168,7 @@ for read_data in range(1):
                     startangle = 90,
                     labeldistance = 1,
                     textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(home + ' vs ' + away)
+            plt.title(home + ' vs ' + away + '\nHype: ' + str(round(hype, 2)))
             plt.axis('equal')
 
     week_book.close()
