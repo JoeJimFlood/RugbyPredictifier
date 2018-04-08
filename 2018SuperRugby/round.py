@@ -10,7 +10,7 @@ import sys
 import time
 import collections
 import matplotlib.pyplot as plt
-from math import ceil, sqrt
+from math import ceil, sqrt, log2
 
 def rgb2hex(r, g, b):
     r_hex = hex(r)[-2:].replace('x', '0')
@@ -144,8 +144,11 @@ for read_data in range(1):
             home_ranking = rankings.loc[home, 'Quantile']
             away_ranking = rankings.loc[away, 'Quantile']
             ranking_factor = (home_ranking + away_ranking)/2
-            uncertainty_factor = 1 - (hwin - awin)**2
-            hype = 100*ranking_factor*uncertainty_factor
+            #uncertainty_factor = 1 - (hwin - awin)**2
+            hp = hwin/(1-draw)
+            ap = awin/(1-draw)
+            entropy = -hp*log2(hp) - ap*log2(ap)
+            hype = 100*ranking_factor*entropy
 
             if n_games == 7 and counter == 7:
                 plot_pos = 8
