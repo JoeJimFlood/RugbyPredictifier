@@ -7,7 +7,7 @@ from numpy import mean
 import time
 import math
 
-po = False
+po = True
 
 team_homes = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'TeamHomes.csv'), header = None, index_col = 0)
 stadium_locs = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'StadiumLocs.csv'), index_col = 0)
