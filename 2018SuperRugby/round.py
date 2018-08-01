@@ -28,12 +28,11 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 'SF'
+round_number = 'F'
 
 matchups = collections.OrderedDict()
 
-matchups['Saturday'] = [('CRUSADERS', 'HURRICANES'),
-                        ('LIONS', 'WARATAHS')]
+matchups['Saturday'] = [('CRUSADERS', 'LIONS')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -179,11 +178,11 @@ for read_data in range(1):
                 plot_pos = counter
 
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
-            labels = [home[:3], away[:3], 'DRAW']
-            values = [hp, ap, 1 - hwin - awin]
-            colors = [colours[home][0], colours[away][0], '#808080']
+            labels = [home[:3], away[:3]]#, 'DRAW']
+            values = [hp, ap]#, 1 - hwin - awin]
+            colors = [colours[home][0], colours[away][0]]#, '#808080']
             ex = 0.05
-            explode = [ex, ex, ex]
+            explode = [ex, ex]#, ex]
             plt.pie(values,
                     colors = colors,
                     labels = labels,
@@ -191,8 +190,8 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(round(hype, 2)))
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 24})
+            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(round(hype, 2)), size = 24)
             plt.axis('equal')
 
     week_book.close()
