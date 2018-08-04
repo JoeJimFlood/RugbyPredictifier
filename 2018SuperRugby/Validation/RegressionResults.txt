@@ -4,7 +4,7 @@ Dep. Variable:           Actual Score   R-squared:                       0.349
 Model:                            OLS   Adj. R-squared:                  0.336
 Method:                 Least Squares   F-statistic:                     28.89
 Date:                Sat, 04 Aug 2018   Prob (F-statistic):           1.67e-06
-Time:                        15:55:36   Log-Likelihood:                -208.28
+Time:                        16:15:30   Log-Likelihood:                -208.28
 No. Observations:                  56   AIC:                             420.6
 Df Residuals:                      54   BIC:                             424.6
 Df Model:                           1                                         

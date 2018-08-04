@@ -62,9 +62,9 @@ plt.axis('equal')
 plt.legend(loc = 'upper right')
 title_lines = ['Rugby Predictifier Validation: 2018 Super Rugby Season',
                'Actual Scores vs. Expected Scores (Average of 5,000,000 Simulations)',
-               'Round 17+: Actual = {0}\u00d7Expected - {1}, r\u00b2 = {2}'.format(round(res.params[0], 2),
-                                                                                    abs(round(res.params[1], 2)),
-                                                                                    round(res.rsquared_adj, 3))]
+               'Round 17+: Actual = {0}\u00d7Expected - {1} + \u03b5, r\u00b2 = {2}'.format(round(res.params[0], 2),
+                                                                                            abs(round(res.params[1], 2)),
+                                                                                            round(res.rsquared_adj, 3))]
 plt.title('\n'.join(title_lines))
 ax = plt.gca()
 ax.set_axisbelow(True)
