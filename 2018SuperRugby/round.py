@@ -28,11 +28,11 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 'F'
+round_number = 'Postseason'
 
 matchups = collections.OrderedDict()
 
-matchups['Saturday'] = [('CRUSADERS', 'LIONS')]
+matchups['Saturday'] = []
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
