@@ -28,15 +28,17 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 3
+round_number = 6
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('HURRICANES', 'BRUMBIES', 'PMR')]
-matchups['Saturday'] = [('CHIEFS', 'SUNWOLVES'),
-                        ('LIONS', 'BULLS'),
-                        ('SHARKS', 'STORMERS'),
-                        ('JAGUARES', 'BLUES')]
+matchups['Friday'] = [('BLUES', 'HIGHLANDERS')]
+matchups['Saturday'] = [('HURRICANES', 'STORMERS'),
+                        ('WARATAHS', 'CRUSADERS', 'SCG'),
+                        ('SUNWOLVES', 'LIONS'),
+                        ('BULLS', 'CHIEFS'),
+                        ('SHARKS', 'REBELS')]
+matchups['Sunday'] = [('REDS', 'BRUMBIES')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -182,11 +184,11 @@ for read_data in range(1):
                 plot_pos = counter
 
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
-            labels = [home[:3], away[:3]]#, 'DRAW']
-            values = [hp, ap]#, 1 - hwin - awin]
-            colors = [colours[home][0], colours[away][0]]#, '#808080']
+            labels = [home[:3], away[:3], 'DRAW']
+            values = [hp, ap, 1 - hwin - awin]
+            colors = [colours[home][0], colours[away][0], '#808080']
             ex = 0.05
-            explode = [ex, ex]#, ex]
+            explode = [ex, ex, ex]
             plt.pie(values,
                     colors = colors,
                     labels = labels,
@@ -195,7 +197,7 @@ for read_data in range(1):
                     startangle = 90,
                     labeldistance = 1,
                     textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 18)
+            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 12)
             plt.axis('equal')
 
     week_book.close()
