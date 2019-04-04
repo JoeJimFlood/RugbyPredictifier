@@ -28,16 +28,17 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 7
+round_number = 8
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('HURRICANES', 'CRUSADERS'),
-                      ('WARATAHS', 'SUNWOLVES', 'NTL')]
-matchups['Saturday'] = [('BLUES', 'STORMERS'),
-                        ('REDS', 'REBELS'),
-                        ('SHARKS', 'BULLS'),
-                        ('JAGUARES', 'CHIEFS')]
+matchups['Friday'] = [('HIGHLANDERS', 'HURRICANES'),
+                      ('REDS', 'STORMERS'),
+                      ('LIONS', 'SHARKS')]
+matchups['Saturday'] = [('CRUSADERS', 'BRUMBIES'),
+                        ('BLUES', 'WARATAHS'),
+                        ('REBELS', 'SUNWOLVES'),
+                        ('BULLS', 'JAGUARES')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
