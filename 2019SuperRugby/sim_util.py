@@ -64,7 +64,8 @@ def eval_results(team_1_scores, team_2_scores, knockout = False):
     if knockout:
         team_1_wins += (0.5*draws)
         team_2_wins += (0.5*draws)
-        return team_1_wins, team_2_wins
+        draws = np.zeros_like(team_1_wins)
+        return team_1_wins, team_2_wins, draws
     else:
         return team_1_wins, team_2_wins, draws
 

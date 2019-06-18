@@ -10,7 +10,7 @@ from numpy import mean
 import time
 import math
 
-po = False
+po = True
 
 team_homes = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'TeamHomes.csv'), header = None, index_col = 0)
 stadium_locs = pd.read_csv(os.path.join(os.path.split(__file__)[0], 'StadiumLocs.csv'), index_col = 0)
@@ -344,7 +344,7 @@ def matchup(team_1, team_2, venue = None):
 
     print(te - ts)
 
-    (team_1_wins, team_2_wins, draws) = sim_util.eval_results(team_1_scores, team_2_scores, False)
+    (team_1_wins, team_2_wins, draws) = sim_util.eval_results(team_1_scores, team_2_scores, po)
     (team_1_tb, team_2_tb) = sim_util.eval_try_bonus(team_1_tries, team_2_tries, 3)
     (team_1_lb, team_2_lb) = sim_util.eval_losing_bonus(team_1_scores, team_2_scores, 7)
 

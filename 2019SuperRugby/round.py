@@ -28,16 +28,14 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 11
+round_number = 'Quarterfinal'
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('CRUSADERS', 'LIONS'),
-                      ('SUNWOLVES', 'HIGHLANDERS')]
-matchups['Saturday'] = [('HURRICANES', 'CHIEFS'),
-                        ('WARATAHS', 'SHARKS', 'PAR'),
-                        ('STORMERS', 'BULLS'),
-                        ('JAGUARES', 'BRUMBIES')]
+matchups['Friday'] = [('CRUSADERS', 'HIGHLANDERS'),
+                      ('JAGUARES', 'CHIEFS')]
+matchups['Saturday'] = [('HURRICANES', 'BULLS'),
+                        ('BRUMBIES', 'SHARKS')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -183,11 +181,11 @@ for read_data in range(1):
                 plot_pos = counter
 
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
-            labels = [home[:3], away[:3], 'DRAW']
-            values = [hp, ap, 1 - hwin - awin]
-            colors = [colours[home][0], colours[away][0], '#808080']
+            labels = [home[:3], away[:3]]#, 'DRAW']
+            values = [hp, ap]#, 1 - hwin - awin]
+            colors = [colours[home][0], colours[away][0]]#, '#808080']
             ex = 0.05
-            explode = [ex, ex, ex]
+            explode = 2*[ex]
             plt.pie(values,
                     colors = colors,
                     labels = labels,
