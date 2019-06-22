@@ -28,14 +28,12 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 'Quarterfinal'
+round_number = 'Semifinal'
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('CRUSADERS', 'HIGHLANDERS'),
-                      ('JAGUARES', 'CHIEFS')]
-matchups['Saturday'] = [('HURRICANES', 'BULLS'),
-                        ('BRUMBIES', 'SHARKS')]
+matchups['Friday'] = [('JAGUARES', 'BRUMBIES')]
+matchups['Saturday'] = [('CRUSADERS', 'HURRICANES')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -180,6 +178,8 @@ for read_data in range(1):
             else:
                 plot_pos = counter
 
+            fs = 24
+
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
             labels = [home[:3], away[:3]]#, 'DRAW']
             values = [hp, ap]#, 1 - hwin - awin]
@@ -193,8 +193,8 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 12)
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 18})
+            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 24)
             plt.axis('equal')
 
     week_book.close()
