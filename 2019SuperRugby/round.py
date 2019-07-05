@@ -28,12 +28,11 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 'Semifinal'
+round_number = 'Final'
 
 matchups = collections.OrderedDict()
 
-matchups['Friday'] = [('JAGUARES', 'BRUMBIES')]
-matchups['Saturday'] = [('CRUSADERS', 'HURRICANES')]
+matchups['Saturday'] = [('CRUSADERS', 'JAGUARES')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -193,8 +192,8 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 18})
-            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 24)
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 24})
+            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 28)
             plt.axis('equal')
 
     week_book.close()
