@@ -21,34 +21,12 @@ round_timer = time.time()
 round_number = 'QF_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['JAPAN'] = [('JAPAN', 'NEW ZEALAND'),
-                     ('JAPAN', 'ENGLAND'),
-                     ('JAPAN', 'WALES'),
-                     ('JAPAN', 'IRELAND'),
-                     ('JAPAN', 'SOUTH AFRICA'),
-                     ('JAPAN', 'FRANCE'),
-                     ('JAPAN', 'AUSTRALIA')]
 matchups['NEW ZEALAND'] = [('NEW ZEALAND', 'ENGLAND'),
                            ('NEW ZEALAND', 'WALES'),
-                           ('NEW ZEALAND', 'IRELAND'),
-                           ('NEW ZEALAND', 'SOUTH AFRICA'),
-                           ('NEW ZEALAND', 'FRANCE'),
-                           ('NEW ZEALAND', 'AUSTRALIA')]
+                           ('NEW ZEALAND', 'SOUTH AFRICA')]
 matchups['ENGLAND'] = [('ENGLAND', 'WALES'),
-                       ('ENGLAND', 'IRELAND'),
-                       ('ENGLAND', 'SOUTH AFRICA'),
-                       ('ENGLAND', 'FRANCE'),
-                       ('ENGLAND', 'AUSTRALIA')]
-matchups['WALES'] = [('WALES', 'IRELAND'),
-                     ('WALES', 'SOUTH AFRICA'),
-                     ('WALES', 'FRANCE'),
-                     ('WALES', 'AUSTRALIA')]
-matchups['IRELAND'] = [('IRELAND', 'SOUTH AFRICA'),
-                       ('IRELAND', 'FRANCE'),
-                       ('IRELAND', 'AUSTRALIA')]
-matchups['SOUTH AFRICA'] = [('SOUTH AFRICA', 'FRANCE'),
-                            ('SOUTH AFRICA', 'AUSTRALIA')]
-matchups['FRANCE'] = [('FRANCE', 'AUSTRALIA')]
+                       ('ENGLAND', 'SOUTH AFRICA')]
+matchups['WALES'] = [('WALES', 'SOUTH AFRICA')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
