@@ -28,16 +28,16 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 3
+round_number = 5
 
 matchups = collections.OrderedDict()
 
-matchups['Round 3'] = [('OGDC', 'NE'),
-                       ('ATL', 'RUNY'),
-                       ('NOLA', 'TOR'),
-                       ('AG', 'UTAH'),
-                       ('DAL', 'HOU'),
-                       ('SD', 'SEA')]
+matchups['Round 5'] = [('SEA', 'NOLA'),
+                       ('ATL', 'HOU'),
+                       ('UTAH', 'DAL'),
+                       ('AUS', 'LA'),
+                       ('RUNY', 'NE'),
+                       ('SD', 'OGDC')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -185,7 +185,7 @@ for read_data in range(1):
             fs = 24
 
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
-            labels = [home[:3], away[:3], 'DRAW']
+            labels = [home, away, 'DRAW']
             values = [hp, ap, 1 - hwin - awin]
             colors = [colours[home][0], colours[away][0], '#808080']
             ex = 0.05
