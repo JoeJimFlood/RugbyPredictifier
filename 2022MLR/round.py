@@ -43,6 +43,7 @@ matchups['Round 8'] = [('OGDC', 'NOLA'),
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
 teamloc_file = location + '/TeamHomes.csv'
+name_file = location + '/names.csv'
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
 output_fig = location + '/Weekly Forecasts/Round_' + str(round_number) + '.png'
 
@@ -68,6 +69,7 @@ counter = 0
 
 stadiums = pd.read_csv(stadium_file, index_col = 0)
 teamlocs = pd.read_csv(teamloc_file, header = None, index_col = 0)[1]
+names = pd.read_csv(name_file, index_col = 0)['Name']
 
 for read_data in range(1):
 
@@ -199,7 +201,7 @@ for read_data in range(1):
                     startangle = 90,
                     labeldistance = 1,
                     textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(home + ' vs ' + away + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 12)
+            plt.title(names[home] + ' vs ' + names[away] + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 12)
             plt.axis('equal')
 
     week_book.close()
