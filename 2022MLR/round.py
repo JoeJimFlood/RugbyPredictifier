@@ -28,17 +28,18 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 13
+round_number = 14
 
 print('Running for round {}'.format(round_number))
 
 matchups = collections.OrderedDict()
 
-matchups['Round 13'] = [('ATL', 'LA'),
-                        ('NE', 'UTAH'),
-                        ('DAL', 'SD'),
-                        ('RUNY', 'NOLA'),
-                        ('AUS', 'SEA')]
+matchups['Round 14'] = [('NE', 'OGDC'),
+                        ('UTAH', 'ATL'),
+                        ('TOR', 'RUNY'),
+                        ('LA', 'AUS'),
+                        ('SD', 'HOU'),
+                        ('SEA', 'DAL')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
