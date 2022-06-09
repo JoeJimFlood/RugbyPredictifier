@@ -18,15 +18,24 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'SF_Matrix'
+round_number = 'Eliminator_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['LIONS'] = [('LIONS', 'CRUSADERS'),
-                     ('LIONS', 'HURRICANES'),
-                     ('LIONS', 'CHIEFS')]
-matchups['CRUSADERS'] = [('CRUSADERS', 'HURRICANES'),
-                         ('CRUSADERS', 'CHIEFS')]
-matchups['HURRICANES'] = [('HURRICANES', 'CHIEFS')]
+matchups['NE'] = [('NE', 'ATL'),
+                  ('NE', 'RUNY'),
+                  ('NE', 'HOU'),
+                  ('NE', 'SEA'),
+                  ('NE', 'SD')]
+matchups['ATL'] = [('ATL', 'RUNY'),
+                   ('ATL', 'HOU'),
+                   ('ATL', 'SEA'),
+                   ('ATL', 'SD')]
+matchups['RUNY'] = [('RUNY', 'HOU'),
+                    ('RUNY', 'SEA'),
+                    ('RUNY', 'SD')]
+matchups['HOU'] = [('HOU', 'SEA'),
+                   ('HOU', 'SD')]
+matchups['SEA'] = [('SEA', 'SD')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
@@ -38,7 +47,7 @@ for day in matchups:
 
 colours = {}
 team_formats = {}
-colour_df = pd.DataFrame.from_csv(location + '/colours.csv')
+colour_df = pd.read_csv(location + '/colours.csv', index_col = 0)
 teams = list(colour_df.index)
 for team in teams:
     primary = rgb2hex(int(colour_df.loc[team, 'R1']), int(colour_df.loc[team, 'G1']), int(colour_df.loc[team, 'B1']))

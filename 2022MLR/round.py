@@ -28,18 +28,14 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 18
+round_number = 'Eliminator'
 
 print('Running for round {}'.format(round_number))
 
 matchups = collections.OrderedDict()
 
-matchups['Round 18'] = [('ATL', 'NOLA'),
-                        ('NE', 'RUNY'),
-                        ('HOU', 'AUS'),
-                        ('DAL', 'UTAH'),
-                        ('TOR', 'OGDC'),
-                        ('LA', 'SEA')]
+matchups['Round Eliminator'] = [('ATL', 'RUNY'),
+                                ('SEA', 'SD')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -189,11 +185,11 @@ for read_data in range(1):
             fs = 24
 
             plt.subplot(plot_shape[n_games][0], plot_shape[n_games][1], plot_pos)
-            labels = [home, away, 'DRAW']
-            values = [hp, ap, 1 - hwin - awin]
-            colors = [colours[home][0], colours[away][0], '#808080']
+            labels = [home, away]#, 'DRAW']
+            values = [hp, ap]#, 1 - hwin - awin]
+            colors = [colours[home][0], colours[away][0]]#, '#808080']
             ex = 0.05
-            explode = 3*[ex]
+            explode = 2*[ex]
             plt.pie(values,
                     colors = colors,
                     labels = labels,
@@ -201,9 +197,9 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 12})
-            plt.title(names[home] + ' vs ' + names[away] + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 12)
-            plt.axis('equal')
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 18})
+            plt.title(names[home] + ' vs ' + names[away] + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 24)
+            #plt.axis('equal')
 
     week_book.close()
 
