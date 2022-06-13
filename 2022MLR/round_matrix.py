@@ -18,24 +18,15 @@ def rgb2hex(r, g, b):
 
 round_timer = time.time()
 
-round_number = 'Eliminator_Matrix'
+round_number = 'CON_Matrix'
 
 matchups = collections.OrderedDict()
-matchups['NE'] = [('NE', 'ATL'),
-                  ('NE', 'RUNY'),
+matchups['NE'] = [('NE', 'RUNY'),
                   ('NE', 'HOU'),
-                  ('NE', 'SEA'),
-                  ('NE', 'SD')]
-matchups['ATL'] = [('ATL', 'RUNY'),
-                   ('ATL', 'HOU'),
-                   ('ATL', 'SEA'),
-                   ('ATL', 'SD')]
+                  ('NE', 'SEA')]
 matchups['RUNY'] = [('RUNY', 'HOU'),
-                    ('RUNY', 'SEA'),
-                    ('RUNY', 'SD')]
-matchups['HOU'] = [('HOU', 'SEA'),
-                   ('HOU', 'SD')]
-matchups['SEA'] = [('SEA', 'SD')]
+                    ('RUNY', 'SEA')]
+matchups['HOU'] = [('HOU', 'SEA')]
 
 location = os.getcwd().replace('\\', '/')
 output_file = location + '/Weekly Forecasts/Round_' + str(round_number) + '.xlsx'
