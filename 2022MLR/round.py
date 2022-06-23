@@ -28,14 +28,13 @@ plot_shape = {1: (1, 1),
 
 round_timer = time.time()
 
-round_number = 'Conference Finals'
+round_number = 'Finals'
 
 print('Running for round {}'.format(round_number))
 
 matchups = collections.OrderedDict()
 
-matchups['Conference Finals'] = [('NE', 'RUNY'),
-                                 ('HOU', 'SEA')]
+matchups['Finals'] = [('RUNY', 'SEA', 'HAR')]
 
 location = os.getcwd().replace('\\', '/')
 stadium_file = location + '/StadiumLocs.csv'
@@ -197,7 +196,7 @@ for read_data in range(1):
                     autopct='%.0f%%',
                     startangle = 90,
                     labeldistance = 1,
-                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 18})
+                    textprops = {'backgroundcolor': '#ffffff', 'ha': 'center', 'va': 'center', 'fontsize': 24})
             plt.title(names[home] + ' vs ' + names[away] + '\n' + stadium + '\n' + city + ', ' + country + '\nHype: ' + str(int(round(hype, 0))), size = 24)
             #plt.axis('equal')
 
